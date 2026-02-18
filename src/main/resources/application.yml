@@ -1,0 +1,51 @@
+# Spring Active Profile (dev or prod)
+spring:
+  profiles:
+    active: dev
+
+  # Server Configuration
+  application:
+    name: JWT Authentication Example
+
+  # Database Configuration (H2 - Default)
+  datasource:
+    url: jdbc:h2:mem:testdb
+    driver-class-name: org.h2.Driver
+    username: sa
+    password:
+
+  # H2 Console (for development only)
+  h2:
+    console:
+      enabled: true
+      path: /h2-console
+
+  # JPA/Hibernate Configuration
+  jpa:
+    database-platform: org.hibernate.dialect.H2Dialect
+    hibernate:
+      ddl-auto: create-drop
+    show-sql: false
+    properties:
+      hibernate:
+        format_sql: true
+        use_sql_comments: true
+
+# Server Configuration
+server:
+  port: 8080
+  servlet:
+    context-path: /
+
+# JWT Configuration
+jwt:
+  secret: mySecretKeyForJWTTokenGenerationAndValidationPurposeOnlyDoNotUseInProduction123456789
+  expiration: 86400000
+
+# Logging Configuration
+logging:
+  level:
+    root: INFO
+    com.jwt.example: DEBUG
+    org.springframework.security: DEBUG
+
