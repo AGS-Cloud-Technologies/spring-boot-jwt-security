@@ -17,7 +17,13 @@ import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.AuthenticationException;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.CrossOrigin;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestHeader;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RestController;
 
 @RestController
 @RequestMapping("/api/auth")
@@ -37,7 +43,7 @@ public class AuthController {
     }
 
     @PostMapping("/signup")
-    public ResponseEntity<?> registerUser(@Valid @RequestBody SignUpRequest signUpRequest) {
+    public ResponseEntity<ApiResponse> registerUser(@Valid @RequestBody SignUpRequest signUpRequest) {
         try {
             User user = userService.createUser(signUpRequest);
             UserDTO userDTO = UserDTO.builder()
@@ -52,9 +58,7 @@ public class AuthController {
             return ResponseEntity.status(HttpStatus.CREATED)
                     .body(new ApiResponse(true, "User registered successfully", userDTO));
         } catch (Exception e) {
-            logger.error("Error during signup", e);
-            System.err.println("Signup Error: " + e.getClass().getName() + " - " + e.getMessage());
-            e.printStackTrace();
+            logger.error("Signup Error: {} - {}", e.getClass().getName(), e.getMessage(), e);
             return ResponseEntity.badRequest()
                     .body(new ApiResponse(false, "Signup failed: " + e.getClass().getSimpleName() + " - " + e.getMessage()));
         }
@@ -64,7 +68,7 @@ public class AuthController {
 
 
     @PostMapping("/login")
-    public ResponseEntity<?> authenticateUser(@Valid @RequestBody LoginRequest loginRequest) {
+    public ResponseEntity<ApiResponse> authenticateUser(@Valid @RequestBody LoginRequest loginRequest) {
         try {
             Authentication authentication = authenticationManager.authenticate(
                     new UsernamePasswordAuthenticationToken(
@@ -93,7 +97,7 @@ public class AuthController {
     }
 
     @GetMapping("/validate")
-    public ResponseEntity<?> validateToken(@RequestHeader("Authorization") String bearerToken) {
+    public ResponseEntity<ApiResponse> validateToken(@RequestHeader("Authorization") String bearerToken) {
         try {
             String token = bearerToken.substring(7);
             boolean isValid = jwtTokenProvider.validateToken(token);
@@ -105,7 +109,7 @@ public class AuthController {
                 return ResponseEntity.status(HttpStatus.UNAUTHORIZED)
                         .body(new ApiResponse(false, "Invalid token"));
             }
-        } catch (Exception e) {
+        } catch (Exception _) {
             return ResponseEntity.status(HttpStatus.UNAUTHORIZED)
                     .body(new ApiResponse(false, "Invalid token format"));
         }
