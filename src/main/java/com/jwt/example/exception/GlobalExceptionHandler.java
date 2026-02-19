@@ -16,7 +16,7 @@ import java.util.Map;
 public class GlobalExceptionHandler {
 
     @ExceptionHandler(InvalidTokenException.class)
-    public ResponseEntity<?> handleInvalidTokenException(InvalidTokenException ex) {
+    public ResponseEntity<ApiResponse> handleInvalidTokenException(InvalidTokenException ex) {
         return new ResponseEntity<>(
                 new ApiResponse(false, "Invalid Token: " + ex.getMessage()),
                 HttpStatus.UNAUTHORIZED
@@ -24,7 +24,7 @@ public class GlobalExceptionHandler {
     }
 
     @ExceptionHandler(TokenExpiredException.class)
-    public ResponseEntity<?> handleTokenExpiredException(TokenExpiredException ex) {
+    public ResponseEntity<ApiResponse> handleTokenExpiredException(TokenExpiredException ex) {
         return new ResponseEntity<>(
                 new ApiResponse(false, "Token Expired: " + ex.getMessage()),
                 HttpStatus.UNAUTHORIZED
@@ -32,7 +32,7 @@ public class GlobalExceptionHandler {
     }
 
     @ExceptionHandler(UsernameNotFoundException.class)
-    public ResponseEntity<?> handleUsernameNotFoundException(UsernameNotFoundException ex) {
+    public ResponseEntity<ApiResponse> handleUsernameNotFoundException(UsernameNotFoundException ex) {
         return new ResponseEntity<>(
                 new ApiResponse(false, "User not found: " + ex.getMessage()),
                 HttpStatus.NOT_FOUND
@@ -40,7 +40,7 @@ public class GlobalExceptionHandler {
     }
 
     @ExceptionHandler(BadCredentialsException.class)
-    public ResponseEntity<?> handleBadCredentialsException() {
+    public ResponseEntity<ApiResponse> handleBadCredentialsException() {
         return new ResponseEntity<>(
                 new ApiResponse(false, "Invalid credentials"),
                 HttpStatus.UNAUTHORIZED
@@ -48,7 +48,7 @@ public class GlobalExceptionHandler {
     }
 
     @ExceptionHandler(MethodArgumentNotValidException.class)
-    public ResponseEntity<?> handleValidationException(MethodArgumentNotValidException ex) {
+    public ResponseEntity<ApiResponse> handleValidationException(MethodArgumentNotValidException ex) {
         Map<String, String> errors = new HashMap<>();
         ex.getBindingResult().getFieldErrors().forEach(error ->
                 errors.put(error.getField(), error.getDefaultMessage())
@@ -60,7 +60,7 @@ public class GlobalExceptionHandler {
     }
 
     @ExceptionHandler(RuntimeException.class)
-    public ResponseEntity<?> handleRuntimeException(RuntimeException ex) {
+    public ResponseEntity<ApiResponse> handleRuntimeException(RuntimeException ex) {
         return new ResponseEntity<>(
                 new ApiResponse(false, ex.getMessage()),
                 HttpStatus.INTERNAL_SERVER_ERROR
@@ -68,7 +68,7 @@ public class GlobalExceptionHandler {
     }
 
     @ExceptionHandler(Exception.class)
-    public ResponseEntity<?> handleGlobalException(Exception ex) {
+    public ResponseEntity<ApiResponse> handleGlobalException(Exception ex) {
         return new ResponseEntity<>(
                 new ApiResponse(false, "An unexpected error occurred: " + ex.getMessage()),
                 HttpStatus.INTERNAL_SERVER_ERROR
