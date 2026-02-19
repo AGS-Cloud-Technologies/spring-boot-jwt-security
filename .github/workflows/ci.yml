@@ -39,7 +39,7 @@ jobs:
 
       - name: Upload test results
         if: always()
-        uses: actions/upload-artifact@v4
+        uses: actions/upload-artifact@v6
         with:
           name: test-reports
           path: target/surefire-reports/
@@ -47,7 +47,7 @@ jobs:
 
       - name: Upload JAR artifacts
         if: success()
-        uses: actions/upload-artifact@v4
+        uses: actions/upload-artifact@v6
         with:
           name: jar-package
           path: target/*.jar
